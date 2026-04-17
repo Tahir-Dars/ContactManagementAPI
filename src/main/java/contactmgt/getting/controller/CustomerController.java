@@ -1,4 +1,4 @@
-package controller;
+package contactmgt.getting.controller;
 
 import org.springframework.web.bind.annotation.*;
 
