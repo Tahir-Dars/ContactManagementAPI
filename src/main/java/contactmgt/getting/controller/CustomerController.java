@@ -18,7 +18,7 @@ public class CustomerController {
 
     @DeleteMapping("/{id}")
     public String deleteContact(@PathVariable int id) {
-        return "Contact " + id + "deleted";
+        return "Contact " + id + " deleted";
     }
 
     @GetMapping("/public/info")
