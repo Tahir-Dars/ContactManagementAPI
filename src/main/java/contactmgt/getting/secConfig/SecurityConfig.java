@@ -15,6 +15,7 @@ public class SecurityConfig {
     SecurityFilterChain defualtSecurityFilterChain(HttpSecurity httpSecurity) {
         httpSecurity.authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests.requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/contacts/public/info").permitAll()
                         .anyRequest().authenticated());
 
         httpSecurity.sessionManagement(
