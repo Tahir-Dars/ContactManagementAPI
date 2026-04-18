@@ -46,7 +46,36 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    UserDetailsService userDetailsService() {
+        return new JdbcUserDetailsManager(dataSource);
+    }
+
+    @Bean
+    public CommandLineRunner intitData(UserDetailsService userDetailsService) {
+        return args -> {
+            JdbcUserDetailsManager jdbcUserDetailsManager = (JdbcUserDetailsManager) userDetailsService;
+            int[] userNumber = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+            JdbcUserDetailsManager userDetailsManager =
+                    new JdbcUserDetailsManager(dataSource);
+            for (int usernumber : userNumber) {
+                UserDetails user = User.withUsername("user" + usernumber)
+                        .password(passwordEncoder().encode("password" + usernumber))
+                        .roles("USER").build();
+                userDetailsManager.createUser(user);
+            }
+            UserDetails admin1 = User.withUsername("admin1")
+                    .password(passwordEncoder().encode("admin1"))
+                    .roles("ADMIN").build();
+            UserDetails admin2 = User.withUsername("admin2")
+                    .password(passwordEncoder().encode("admin2"))
+                    .roles("ADMIN").build();
+            userDetailsManager.createUser(admin1);
+            userDetailsManager.createUser(admin2);
+        };
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
