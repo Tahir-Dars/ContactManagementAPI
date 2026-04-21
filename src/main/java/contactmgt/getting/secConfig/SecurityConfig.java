@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,65 +20,61 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Autowired
     DataSource dataSource;
 
     @Bean
-    SecurityFilterChain defualtSecurityFilterChain(HttpSecurity httpSecurity) {
-        httpSecurity.authorizeHttpRequests(authorizeRequests ->
+    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests.requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/contacts/public/info").permitAll()
+                        .requestMatchers("/signin").permitAll()
                         .anyRequest().authenticated());
-
-        httpSecurity.httpBasic(Customizer.withDefaults());
-
-        httpSecurity.sessionManagement(
+        http.sessionManagement(
                 session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        session.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS)
         );
+        http.headers(headers -> headers
+                .frameOptions(frameOptions -> frameOptions
+                        .sameOrigin()
+                )
+        );
+        http.csrf(csrf -> csrf.disable());
 
-        httpSecurity.headers(headers -> headers.frameOptions(
-                frameOptions -> frameOptions.sameOrigin()
-        ));
-
-        httpSecurity.csrf(csrf -> csrf.disable());
-
-        return httpSecurity.build();
+        return http.build();
     }
 
     @Bean
-    UserDetailsService userDetailsService() {
+    public UserDetailsService userDetailsService(DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);
     }
 
     @Bean
-    public CommandLineRunner intitData(UserDetailsService userDetailsService) {
+    public CommandLineRunner initData(UserDetailsService userDetailsService) {
         return args -> {
-            JdbcUserDetailsManager jdbcUserDetailsManager = (JdbcUserDetailsManager) userDetailsService;
-            int[] userNumber = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-            JdbcUserDetailsManager userDetailsManager =
-                    new JdbcUserDetailsManager(dataSource);
-            for (int usernumber : userNumber) {
-                UserDetails user = User.withUsername("user" + usernumber)
-                        .password(passwordEncoder().encode("password" + usernumber))
-                        .roles("USER").build();
-                userDetailsManager.createUser(user);
-            }
-            UserDetails admin1 = User.withUsername("admin1")
-                    .password(passwordEncoder().encode("admin1"))
-                    .roles("ADMIN").build();
-            UserDetails admin2 = User.withUsername("admin2")
-                    .password(passwordEncoder().encode("admin2"))
-                    .roles("ADMIN").build();
-            userDetailsManager.createUser(admin1);
-            userDetailsManager.createUser(admin2);
+            JdbcUserDetailsManager manager = (JdbcUserDetailsManager) userDetailsService;
+            UserDetails user1 = User.withUsername("user1")
+                    .password(passwordEncoder().encode("password1"))
+                    .roles("USER")
+                    .build();
+            UserDetails admin = User.withUsername("admin")
+                    //.password(passwordEncoder().encode("adminPass"))
+                    .password(passwordEncoder().encode("adminPass"))
+                    .roles("ADMIN")
+                    .build();
+
+            JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
+            manager.createUser(user1);
+            manager.createUser(admin);
         };
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
 }
