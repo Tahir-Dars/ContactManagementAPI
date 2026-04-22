@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerController {
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public String getContacts() {
         return "Returning All contacts";
     }
@@ -19,6 +20,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteContact(@PathVariable int id) {
         return "Contact " + id + " deleted";
     }
