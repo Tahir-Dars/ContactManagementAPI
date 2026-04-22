@@ -1,0 +1,90 @@
+{
+  "info": {
+    "_postman_id": "443cffd8-433d-4b52-8ba3-df93051acf61",
+    "name": "ContactManagementAPI",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "41089607",
+    "_collection_link": "https://go.postman.co/collection/41089607-443cffd8-433d-4b52-8ba3-df93051acf61?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get Contacts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/contacts",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "contacts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add a contact",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/contacts",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "contacts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete a contact",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/contacts/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "contacts",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Public Information API",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/contacts/public/info",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "contacts",
+            "public",
+            "info"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
