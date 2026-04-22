@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerController {
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public String getContacts() {
         return "Returning All contacts";
     }
