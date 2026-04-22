@@ -23,7 +23,7 @@ public class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests.requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/signin").permitAll()
+                        .requestMatchers("/public/**").permitAll()
                         .anyRequest().authenticated());
         http.sessionManagement(
                 session ->
